@@ -10,12 +10,19 @@ export function initFiltering(elements) {
         })
     }
     const applyFiltering = (query, state, action) => {
-        if (action?.element?.closest('[data-clear]')) {
-            const clearBtn = action.element.closest('[data-clear]');
-            const fieldToClear = clearBtn.dataset.field;
-            if (elements[fieldToClear]) {
-                elements[fieldToClear].value = '';
-                state = { ...state, [fieldToClear]: '' };
+        if (action?.name === 'clear') {
+            const fieldToClear = action.dataset.field;
+            const targetElement = Object.values(elements).find(el => 
+                el?.name === fieldToClear
+            );
+            if (targetElement) {
+                targetElement.value = '';
+                const fieldKey = Object.keys(elements).find(key => 
+                    elements[key] === targetElement
+                );
+                if (fieldKey) {
+                    state = { ...state, [fieldKey]: '' };
+                }
             }
         }
         const filter = {};
